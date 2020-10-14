@@ -1,0 +1,14 @@
+{
+  "name": "basic-test-unit-tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "basic-test.spec.js",
+  "dependencies": {
+    "jest": "^26.5.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jaganathan.nanthakumar@outlook.com"
+}

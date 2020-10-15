@@ -37,9 +37,13 @@ REDIS_PORT=6379
 Then run the below commands,
 
 > php artisan key:generate
+
 <br />
+
 > php artisan migrate
+
 <br />
+
 > php artisan test
 
 If everything went fine, you should see the test case passing as shown below:

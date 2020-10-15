@@ -1,99 +1,55 @@
-<center>
-<img src="https://cdn.website-editor.net/7faf6d1ccff4459495853794e59fe9be/dms3rep/multi/mobile/Befeni_ohne_Claim.png" height="100">
+# Befeni Technical Test [Advanced] - Solution by Jaganathan Nanthakumar
 
-# Befeni Technical Test [Advanced]
-</center>
+## Source Overview
 
-## Test Overview
+[Laravel framework](https://laravel.com/) was used to complete **Requirement 1** and **Requirement 2**. An automated feature test is also written to ensure the requirements are met. 
 
-You are working on a project that receives shirt orders from several sources such as an external API or an in-house data warehouse. Because the import process is expensive - you have already set up a local MySQL database to store the data after the import.
+To setup and run the project you need below softwares and tools installed:
 
-Additionally you might have a cache database (e.g. Redis) for quicker access to frequently used data or an ElasticSearch instance to filter that data. The Shirt Order model in it's simplest form has a customer ID, fabric ID, collar size, chest size, waist size and wrist size. You can find a version of this model below.
+- PHP with Composer
+- MySQL
+- Redis
 
-Below are the requirements.
+After installing above requirements, navigate to this directory and run below command
 
-The number of hours after the requirements are an indication of the time you need to finish the task. If you need extra hours that is not a problem. The assignment is abstract on purpose.
+>composer install
 
-## Requirement 1.
+It will take a while to download all dependencies. Once its complete, make a copy of **.env.example** file and rename it to **.env**. After doing this, please ensure to update the below values as per your setup.
 
-*Est. Time: 4 hours.*
+**DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379**
 
-Maintaining the code that satisfies the above conditions is obviously going to be a difficult task, unless there is a proper design to reduce complexity and enhance flexibility.
+Then run the below commands,
 
-You are requested to design an architecture where all shirt order data will be requested from a centralized point; a class called ShirtOrderRepository.
+> php artisan key:generate
+> php artisan migrate
+> php artisan test
 
-The ShirtOrderRepository is responsible to talk to the different data sources, and for that reason it needs to be able to talk to a new data source with minimal additions to the code.
+If everything went fine, you should see the test case passing as shown below:
 
-It also needs to be able to select which data sources it is going to communicate with (in other words, it should be possible to add/remove the data sources dynamically). We prefer a solution uses methods that are common whether you have mysql, cache, elasticsearch or whatever else.
+<img src="https://jaganathan.online/develop/assignments/bifeni/advanced-test-feature-test-passing.png" >
 
-## Requirement 2.
+You can also check your data sources directly to ensure they are in sync.
 
-*Est. Time: 1 hour.*
+<img src="https://jaganathan.online/develop/assignments/bifeni/advanced-test-data-sources-output.png" width="1300" height="300">
 
-Your implementation needs to be accompanied by automated tests​.
+## Explanation
 
-## Requirement 3.
+The core part of the solution is the class **App\Befeni\Repository\ShirtOrderRepository**. This class allows to plugin any new data source into the system by implementing the repository pattern but not directly. For all operations on data sources, it accepts arguments with data source names and defaults to standard ones if not provided. It maintains an associative array of data sources and the associated objects that allow it to do the user requested operations. These objects are data source specific implementors for  e.g, **App\Befeni\Repository\ShirtOrderRepositoryMysql** and **App\Befeni\Repository\ShirtOrderRepositoryRedis** that implement the interface **App\Befeni\Repository\ShirtOrderRepositoryInterface**. 
 
-*Extra, not necessary. Est. Time: 8 hours.*
+There is also an automated feature test class **Tests\Feature\ShirtOrderRepositoryTest** that ensures the requirements are met by performing the following sequence of operations.
 
-After the implementation of the above requirements you can now access your Shirt Order model without caring where it came from. There is one little catch though. If you decide to update/delete the model, this action needs to be reflected to all the data sources that contain this shirt order. For that reason you are requested to design the appropriate classes/code to reflect the actions that alter a model to all associated data sources.
+- Create a shirt order with random field values
+- Create an instance of class under feature test **App\Befeni\Repository\ShirtOrderRepository**
+- Use it to save the shirt order to default data source (MySQL)
+- Override the data source in save method to save the same shirt order to Redis
+- Retrieve the saved shirt order from default search data source Redis and also ensure assertions on all field values are successful
 
-```
-<?php
-namespace Befeni\Model;
-/**
-* A test Shirt Order model
-*/
-class ShirtOrder
-{
-	/**
-	 * The id of the shirt order
-	 *
-	 * @var integer
-	 */
-	public $id;
-	
-	/**
-	 * The id of the customer
-	 *
-	 * @var integer
-	 */
-	public $customerId;
-	
-	/**
-	 * The id of the fabric
-	 *
-	 * @var integer
-	 */
-	public $fabricId;
-	
-	/**
-	 * The size of the customer's collar in inches
-	 *
-	 * @var integer
-	 */
-	public $collarSize;
-	
-	/**
-	 * The size of the customer's chest in inches
-	 *
-	 * @var integer
-	 */
-	public $chestSize;
-	
-	/**
-	 * The size of the customer's waist in inches
-	 *
-	 * @var integer
-	 */
-	public $waistSize;
-	
-	/**
-	 * The size of the customer's wrist in inches
-	 *
-	 * @var integer
-	 */
-	public $wristSize;
-	
-}
-```
+##### For more information please write to jaganathan.nanthakumar@outlook.com

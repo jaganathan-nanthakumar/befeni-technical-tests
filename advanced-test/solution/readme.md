@@ -17,19 +17,29 @@ After installing above requirements, navigate to this directory and run below co
 It will take a while to download all dependencies. Once its complete, make a copy of **.env.example** file and rename it to **.env**. After doing this, please ensure to update the below values as per your setup.
 
 DB_CONNECTION=mysql
+<br />
 DB_HOST=127.0.0.1
+<br />
 DB_PORT=3306
+<br />
 DB_DATABASE=laravel
+<br />
 DB_USERNAME=root
+<br />
 DB_PASSWORD=
+<br />
 REDIS_HOST=127.0.0.1
+<br />
 REDIS_PASSWORD=null
+<br />
 REDIS_PORT=6379
 
 Then run the below commands,
 
 > php artisan key:generate
+<br />
 > php artisan migrate
+<br />
 > php artisan test
 
 If everything went fine, you should see the test case passing as shown below:
